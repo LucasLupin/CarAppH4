@@ -1,0 +1,122 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background">
+
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="70dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/cartest"
+        android:contentDescription="App Logo" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
+        android:layout_marginTop="-40dp"
+        android:layout_centerHorizontal="true"
+        android:text="Car Club"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
+
+    <!-- Welcome Back -->
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"
+        android:text="Welcome Back"
+        android:textColor="@android:color/white"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <!-- Sign In Button -->
+    <Button
+        android:id="@+id/signInButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcomeText"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/outline_button_background"
+        android:text="SIGN IN"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Sign Up Button -->
+    <Button
+        android:id="@+id/signUpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signInButton"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/solid_button_background"
+        android:text="SIGN UP"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Social Media Text -->
+    <TextView
+        android:id="@+id/socialMediaText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signUpButton"
+        android:layout_marginTop="140dp"
+        android:layout_centerHorizontal="true"
+        android:text="Login with Social Media"
+        android:textColor="@android:color/white"
+        android:textSize="22sp"
+        android:textStyle="normal" />
+
+    <!-- Social Media Icons -->
+    <LinearLayout
+        android:id="@+id/socialIcons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/socialMediaText"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/instagramIcon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/instagram2"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Instagram" />
+
+        <ImageView
+            android:id="@+id/twitterIcon"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/twitter2"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="5dp"
+            android:contentDescription="Twitter" />
+
+        <ImageView
+            android:id="@+id/facebookIcon"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/facebook"
+            android:layout_marginTop="5dp"
+            android:contentDescription="Facebook" />
+    </LinearLayout>
+
+</RelativeLayout>

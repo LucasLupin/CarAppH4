@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "376372398021",
+    "project_id": "carapph4",
+    "storage_bucket": "carapph4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376372398021:android:ed7d22716979698caaadac",
+        "android_client_info": {
+          "package_name": "com.example.carapph4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxhUkOQi8_cnSL0lmBrBIOo_0hKXnodpE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
