@@ -15,6 +15,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -31,13 +36,18 @@ public class CameraActivity extends AppCompatActivity {
     private ImageView imageView;
     private Uri imageUri;
     private ActivityResultLauncher<Intent> cameraLauncher;
+    private Button takePhotoButton;
+    private Button savePhotoButton;
+    private Button resetButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        Button takePhotoButton = findViewById(R.id.takePhotoButton);
+        takePhotoButton = findViewById(R.id.takePhotoButton);
+        savePhotoButton = findViewById(R.id.savePhotoButton);
+        resetButton = findViewById(R.id.resetButton);
         imageView = findViewById(R.id.capturedImageView);
 
         // Initialize the camera launcher
@@ -46,6 +56,7 @@ public class CameraActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         displayCapturedImage();
+                        switchToSaveResetButtons();
                     } else {
                         Toast.makeText(this, "Failed to capture image.", Toast.LENGTH_SHORT).show();
                     }
@@ -58,6 +69,20 @@ public class CameraActivity extends AppCompatActivity {
             } else {
                 captureHighResImage();
             }
+        });
+
+        savePhotoButton.setOnClickListener(v -> {
+            if (imageUri != null) {
+                uploadImageToFirebaseStorage(imageUri);
+            } else {
+                Toast.makeText(this, "No image to save.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        resetButton.setOnClickListener(v -> {
+            resetToTakePictureButton();
+            imageView.setImageBitmap(null);
+            imageUri = null;
         });
     }
 
@@ -145,7 +170,6 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-
     private Bitmap correctImageOrientation(Bitmap bitmap) throws IOException {
         if (imageUri != null) {
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
@@ -180,6 +204,61 @@ public class CameraActivity extends AppCompatActivity {
         android.graphics.Matrix matrix = new android.graphics.Matrix();
         matrix.postRotate(degrees);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    private void uploadImageToFirebaseStorage(Uri imageUri) {
+        // Reference Firebase Storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        // Define the file path in Firebase Storage
+        String fileName = "images/" + System.currentTimeMillis() + ".jpg";
+        StorageReference fileRef = storageReference.child(fileName);
+
+        // Upload the image
+        fileRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        Toast.makeText(this, "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
+                        saveImageUrlToDatabase(imageUrl);
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    private void saveImageUrlToDatabase(String imageUrl) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = database.getReference("images");
+
+        String uniqueKey = databaseReference.push().getKey();
+
+        if (uniqueKey != null) {
+            databaseReference.child(uniqueKey).setValue(imageUrl)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Image URL saved successfully in database.", Toast.LENGTH_SHORT).show();
+                        resetToTakePictureButton();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to save image URL: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+        }
+    }
+
+    private void switchToSaveResetButtons() {
+        takePhotoButton.setVisibility(Button.GONE);
+        savePhotoButton.setVisibility(Button.VISIBLE);
+        resetButton.setVisibility(Button.VISIBLE);
+    }
+
+    private void resetToTakePictureButton() {
+        savePhotoButton.setVisibility(Button.GONE);
+        resetButton.setVisibility(Button.GONE);
+        takePhotoButton.setVisibility(Button.VISIBLE);
+        imageView.setImageBitmap(null);
+        imageUri = null;
     }
 
     @Override

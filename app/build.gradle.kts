@@ -73,6 +73,7 @@ dependencies {
 
     // Google ML Kit Text Recognition
     implementation("com.google.mlkit:text-recognition:16.0.0")
+    implementation(libs.firebase.storage)
 
     // Testing dependencies
     testImplementation(libs.junit)
